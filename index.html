@@ -1,0 +1,116 @@
+<!--
+	DESARROLLADOR: JUAN CARLOS PANIAGUA
+	VERSION: 0001
+	FECHA: DAY MONTH 2019
+	
+	PAGINA DE :DESCRIPCION
+-->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="author" content="Juan C. Paniagua R.">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="../config/player.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="../config/player.png" type="image/x-icon">
+    <title>player</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="">
+    <!--    <script src="js/jquery-3.3.1.min.js"></script>-->
+    <style>
+        form,h3{
+            text-align: center;}
+        #vista{ text-align: center;}
+        .container{
+         position: relative;
+            display: inline-block;
+                   }
+        .container button{
+         position: absolute;
+            top: 0px;
+            right: 0px;
+            background: red;
+            border: none;
+            outline: none;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            height: 23px;
+            
+            
+        }
+        
+        
+        </style>
+</head>
+  
+<body>
+<h3>Youtube Views Player</h3>
+    <form id="form">
+        <input type="text" name="url" id="url" placeholder="Ingrese la URL" required>
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <hr>
+    <div id="vista"></div>
+
+
+    <script>
+        vista();
+        $('form').submit(function() {
+
+            let url = $('#url').val();
+            let newUrl = url.replace("https://youtu.be/", "https://www.youtube.com/embed/");
+            newUrl = newUrl.replace("https://youtube.com/shorts/", "https://www.youtube.com/embed/");
+            newUrl = newUrl.replace("?feature=share", "");
+            newUrl = newUrl + "?autoplay=1&mute=1";
+            console.log(newUrl);
+            $.ajax({
+                type: 'POST',
+                url: 'server/gestor.php',
+                data: {
+                    url: newUrl,
+                    newVideo: ''
+                },
+                success: function(data) {
+                    vista();
+                    document.getElementById("form").reset();
+                }
+            });
+            return false;
+        });
+
+        function vista() {
+            $.ajax({
+                type: 'POST',
+                url: 'server/gestor.php',
+                data: {
+                    vista: ''
+                },
+                success: function(data) {
+                    $('#vista').html(data);
+                }
+            });
+            return false;
+        }
+        function eliminar(code) {
+            $.ajax({
+                type: 'POST',
+                url: 'server/gestor.php',
+                data: {
+                    code: code,
+                    eliminar: ''
+                },
+                success: function(data) {
+                     vista();
+                    $('body').append(data);
+                }
+            });
+            return false;
+        }
+    </script>
+
+</body></html>
